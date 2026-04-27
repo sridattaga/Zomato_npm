@@ -45,18 +45,19 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withCredentials([string(credentialsId: 'sonarqube_cred', variable: 'SONAR_TOKEN')]) {
+
                     withSonarQubeEnv('sonarqube') {
 
                         script {
-                            def scannerHome = tool 'sonarscanner'
+                            def scannerHome = tool name: 'sonarscanner'
 
                             sh """
                             ${scannerHome}/bin/sonar-scanner \
                               -Dsonar.projectKey=zomato \
-                              -Dsonar.sources=. \
                               -Dsonar.projectName=Zomato-App \
+                              -Dsonar.sources=. \
                               -Dsonar.projectVersion=${BUILD_NUMBER} \
-                              -Dsonar.login=$SONAR_TOKEN
+                              -Dsonar.login=${SONAR_TOKEN}
                             """
                         }
                     }
